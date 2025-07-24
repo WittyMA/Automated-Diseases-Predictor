@@ -1,0 +1,4 @@
+# This is a binary file (Keras HDF5 model).
+# In a real application, this would be loaded and used by a TensorFlow/Keras inference server.
+# It cannot be directly executed within a Cloudflare Worker without conversion to TensorFlow.js format,
+# which you requested not to do.
