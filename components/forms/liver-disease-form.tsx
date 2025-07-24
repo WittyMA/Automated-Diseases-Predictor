@@ -7,46 +7,74 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 
 const formSchema = z.object({
-  age: z.coerce.number().min(0, "Cannot be negative").max(120, "Too old").default(40),
-  gender: z.enum(["Male", "Female"], { required_error: "Please select gender." }).default("Male"),
-  totalBilirubin: z.coerce.number().min(0, "Cannot be negative").max(100, "Too high").default(1.0),
-  directBilirubin: z.coerce.number().min(0, "Cannot be negative").max(50, "Too high").default(0.2),
-  alkalinePhosphotase: z.coerce.number().min(0, "Cannot be negative").max(2000, "Too high").default(180),
-  alamineAminotransferase: z.coerce.number().min(0, "Cannot be negative").max(2000, "Too high").default(40),
-  aspartateAminotransferase: z.coerce.number().min(0, "Cannot be negative").max(2000, "Too high").default(40),
-  totalProtiens: z.coerce.number().min(0, "Cannot be negative").max(15, "Too high").default(7.0),
-  albumin: z.coerce.number().min(0, "Cannot be negative").max(10, "Too high").default(3.5),
-  albuminAndGlobulinRatio: z.coerce.number().min(0, "Cannot be negative").max(5, "Too high").default(1.0),
+  age: z.coerce.number().min(0, "Must be non-negative"),
+  gender: z.enum(["Male", "Female"], { message: "Please select a valid option" }),
+  totalBilirubin: z.coerce.number().min(0, "Must be non-negative"),
+  directBilirubin: z.coerce.number().min(0, "Must be non-negative"),
+  alkalinePhosphotase: z.coerce.number().min(0, "Must be non-negative"),
+  alamineAminotransferase: z.coerce.number().min(0, "Must be non-negative"),
+  aspartateAminotransferase: z.coerce.number().min(0, "Must be non-negative"),
+  totalProtiens: z.coerce.number().min(0, "Must be non-negative"),
+  albumin: z.coerce.number().min(0, "Must be non-negative"),
+  albuminAndGlobulinRatio: z.coerce.number().min(0, "Must be non-negative"),
 })
 
 interface LiverDiseaseFormProps {
-  onSubmit: (data: z.infer<typeof formSchema>) => void
-  loading: boolean
+  setPrediction: Dispatch<SetStateAction<any>>
+  setLoading: Dispatch<SetStateAction<boolean>>
+  setError: Dispatch<SetStateAction<string | null>>
 }
 
-export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
+export default function LiverDiseaseForm({ setPrediction, setLoading, setError }: LiverDiseaseFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      age: 40,
+      age: 0,
       gender: "Male",
-      totalBilirubin: 1.0,
-      directBilirubin: 0.2,
-      alkalinePhosphotase: 180,
-      alamineAminotransferase: 40,
-      aspartateAminotransferase: 40,
-      totalProtiens: 7.0,
-      albumin: 3.5,
-      albuminAndGlobulinRatio: 1.0,
+      totalBilirubin: 0,
+      directBilirubin: 0,
+      alkalinePhosphotase: 0,
+      alamineAminotransferase: 0,
+      aspartateAminotransferase: 0,
+      totalProtiens: 0,
+      albumin: 0,
+      albuminAndGlobulinRatio: 0,
     },
   })
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    setError(null)
+    setPrediction(null)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL}/api/predict/liver-disease`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Prediction failed")
+      }
+
+      const data = await response.json()
+      setPrediction(data)
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -55,7 +83,7 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
               <FormItem>
                 <FormLabel>Age</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Age in years" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,9 +115,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="totalBilirubin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Total Bilirubin (mg/dL)</FormLabel>
+                <FormLabel>Total Bilirubin</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Total Bilirubin" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,9 +128,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="directBilirubin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Direct Bilirubin (mg/dL)</FormLabel>
+                <FormLabel>Direct Bilirubin</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Direct Bilirubin" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -113,9 +141,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="alkalinePhosphotase"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Alkaline Phosphotase (IU/L)</FormLabel>
+                <FormLabel>Alkaline Phosphotase</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Alkaline Phosphotase" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -126,9 +154,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="alamineAminotransferase"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Alamine Aminotransferase (IU/L)</FormLabel>
+                <FormLabel>Alamine Aminotransferase</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Alamine Aminotransferase" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -139,9 +167,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="aspartateAminotransferase"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Aspartate Aminotransferase (IU/L)</FormLabel>
+                <FormLabel>Aspartate Aminotransferase</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Aspartate Aminotransferase" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -152,9 +180,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="totalProtiens"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Total Protiens (g/dL)</FormLabel>
+                <FormLabel>Total Protiens</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Total Protiens" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -165,9 +193,9 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
             name="albumin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Albumin (g/dL)</FormLabel>
+                <FormLabel>Albumin</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Albumin" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -180,17 +208,14 @@ export function LiverDiseaseForm({ onSubmit, loading }: LiverDiseaseFormProps) {
               <FormItem>
                 <FormLabel>Albumin and Globulin Ratio</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="A/G Ratio" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Predict Liver Disease
-        </Button>
+        <Button type="submit">Predict Liver Disease</Button>
       </form>
     </Form>
   )

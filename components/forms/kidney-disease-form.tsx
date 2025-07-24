@@ -7,74 +7,102 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 
 const formSchema = z.object({
-  age: z.coerce.number().min(0, "Cannot be negative").max(120, "Too old").default(40),
-  bp: z.coerce.number().min(0, "Cannot be negative").max(180, "Too high").default(80), // Blood Pressure
-  sg: z.coerce.number().min(1.0, "Too low").max(1.03, "Too high").default(1.015), // Specific Gravity
-  al: z.coerce.number().min(0, "Cannot be negative").max(5, "Too high").default(0), // Albumin
-  su: z.coerce.number().min(0, "Cannot be negative").max(5, "Too high").default(0), // Sugar
-  rbc: z.enum(["normal", "abnormal"]).optional().default("normal"), // Red Blood Cells
-  pc: z.enum(["normal", "abnormal"]).optional().default("normal"), // Pus Cell
-  pcc: z.enum(["present", "notpresent"]).optional().default("present"), // Pus Cell Clumps
-  ba: z.enum(["present", "notpresent"]).optional().default("present"), // Bacteria
-  bgr: z.coerce.number().min(0, "Cannot be negative").max(500, "Too high").default(120), // Blood Glucose Random
-  bu: z.coerce.number().min(0, "Cannot be negative").max(400, "Too high").default(40), // Blood Urea
-  sc: z.coerce.number().min(0, "Cannot be negative").max(20, "Too high").default(1.2), // Serum Creatinine
-  sod: z.coerce.number().min(0, "Cannot be negative").max(180, "Too high").default(140), // Sodium
-  pot: z.coerce.number().min(0, "Cannot be negative").max(10, "Too high").default(4.0), // Potassium
-  hemo: z.coerce.number().min(0, "Cannot be negative").max(20, "Too high").default(14.0), // Hemoglobin
-  pcv: z.coerce.number().min(0, "Cannot be negative").max(60, "Too high").default(45), // Packed Cell Volume
-  wc: z.coerce.number().min(0, "Cannot be negative").max(25000, "Too high").default(7000), // White Blood Cell Count
-  rc: z.coerce.number().min(0, "Cannot be negative").max(10, "Too high").default(5.0), // Red Blood Cell Count
-  htn: z.enum(["yes", "no"]).optional().default("no"), // Hypertension
-  dm: z.enum(["yes", "no"]).optional().default("no"), // Diabetes Mellitus
-  cad: z.enum(["yes", "no"]).optional().default("no"), // Coronary Artery Disease
-  appet: z.enum(["good", "poor"]).optional().default("good"), // Appetite
-  pe: z.enum(["yes", "no"]).optional().default("no"), // Pedal Edema
-  ane: z.enum(["yes", "no"]).optional().default("no"), // Anemia
+  age: z.coerce.number().min(0, "Must be non-negative"),
+  bp: z.coerce.number().min(0, "Must be non-negative"),
+  sg: z.coerce.number().min(0, "Must be non-negative"),
+  al: z.coerce.number().min(0, "Must be non-negative"),
+  su: z.coerce.number().min(0, "Must be non-negative"),
+  rbc: z.enum(["normal", "abnormal", ""], { message: "Please select a valid option" }).optional(),
+  pc: z.enum(["normal", "abnormal", ""], { message: "Please select a valid option" }).optional(),
+  pcc: z.enum(["present", "notpresent", ""], { message: "Please select a valid option" }).optional(),
+  ba: z.enum(["present", "notpresent", ""], { message: "Please select a valid option" }).optional(),
+  bgr: z.coerce.number().min(0, "Must be non-negative"),
+  bu: z.coerce.number().min(0, "Must be non-negative"),
+  sc: z.coerce.number().min(0, "Must be non-negative"),
+  sod: z.coerce.number().min(0, "Must be non-negative"),
+  pot: z.coerce.number().min(0, "Must be non-negative"),
+  hemo: z.coerce.number().min(0, "Must be non-negative"),
+  pcv: z.coerce.number().min(0, "Must be non-negative"),
+  wc: z.coerce.number().min(0, "Must be non-negative"),
+  rc: z.coerce.number().min(0, "Must be non-negative"),
+  htn: z.enum(["yes", "no", ""], { message: "Please select a valid option" }).optional(),
+  dm: z.enum(["yes", "no", ""], { message: "Please select a valid option" }).optional(),
+  cad: z.enum(["yes", "no", ""], { message: "Please select a valid option" }).optional(),
+  appet: z.enum(["good", "poor", ""], { message: "Please select a valid option" }).optional(),
+  pe: z.enum(["yes", "no", ""], { message: "Please select a valid option" }).optional(),
+  ane: z.enum(["yes", "no", ""], { message: "Please select a valid option" }).optional(),
 })
 
 interface KidneyDiseaseFormProps {
-  onSubmit: (data: z.infer<typeof formSchema>) => void
-  loading: boolean
+  setPrediction: Dispatch<SetStateAction<any>>
+  setLoading: Dispatch<SetStateAction<boolean>>
+  setError: Dispatch<SetStateAction<string | null>>
 }
 
-export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps) {
+export default function KidneyDiseaseForm({ setPrediction, setLoading, setError }: KidneyDiseaseFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      age: 40,
-      bp: 80,
-      sg: 1.015,
+      age: 0,
+      bp: 0,
+      sg: 0,
       al: 0,
       su: 0,
-      rbc: "normal",
-      pc: "normal",
-      pcc: "present",
-      ba: "present",
-      bgr: 120,
-      bu: 40,
-      sc: 1.2,
-      sod: 140,
-      pot: 4.0,
-      hemo: 14.0,
-      pcv: 45,
-      wc: 7000,
-      rc: 5.0,
-      htn: "no",
-      dm: "no",
-      cad: "no",
-      appet: "good",
-      pe: "no",
-      ane: "no",
+      rbc: "",
+      pc: "",
+      pcc: "",
+      ba: "",
+      bgr: 0,
+      bu: 0,
+      sc: 0,
+      sod: 0,
+      pot: 0,
+      hemo: 0,
+      pcv: 0,
+      wc: 0,
+      rc: 0,
+      htn: "",
+      dm: "",
+      cad: "",
+      appet: "",
+      pe: "",
+      ane: "",
     },
   })
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    setError(null)
+    setPrediction(null)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL}/api/predict/kidney-disease`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Prediction failed")
+      }
+
+      const data = await response.json()
+      setPrediction(data)
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -83,7 +111,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Age</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Age in years" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,9 +122,9 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             name="bp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Blood Pressure (mmHg)</FormLabel>
+                <FormLabel>Blood Pressure (mm/Hg)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Blood pressure" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -109,7 +137,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Specific Gravity</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.001" placeholder="Specific gravity" {...field} />
+                  <Input type="number" step="0.001" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,7 +150,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Albumin</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Albumin" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -135,7 +163,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Sugar</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Sugar" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -150,7 +178,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -171,7 +199,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -192,7 +220,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -213,7 +241,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -230,9 +258,9 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             name="bgr"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Blood Glucose Random (mg/dl)</FormLabel>
+                <FormLabel>Blood Glucose Random (mgs/dl)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Blood glucose" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -243,9 +271,9 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             name="bu"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Blood Urea (mg/dl)</FormLabel>
+                <FormLabel>Blood Urea (mgs/dl)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Blood urea" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -256,9 +284,9 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             name="sc"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Serum Creatinine (mg/dl)</FormLabel>
+                <FormLabel>Serum Creatinine (mgs/dl)</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Serum creatinine" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -271,7 +299,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Sodium (mEq/L)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Sodium" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -284,7 +312,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Potassium (mEq/L)</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Potassium" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -295,9 +323,9 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             name="hemo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Hemoglobin (g/dl)</FormLabel>
+                <FormLabel>Hemoglobin (gms)</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Hemoglobin" {...field} />
+                  <Input type="number" step="0.1" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -310,7 +338,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Packed Cell Volume</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Packed cell volume" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -321,9 +349,9 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             name="wc"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>White Blood Cell Count (cells/cumm)</FormLabel>
+                <FormLabel>White Blood Cell Count (cells/cmm)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="White blood cell count" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -336,7 +364,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
               <FormItem>
                 <FormLabel>Red Blood Cell Count (millions/cmm)</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Red blood cell count" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -351,7 +379,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -372,7 +400,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -393,7 +421,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -414,7 +442,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -435,7 +463,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -456,7 +484,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -469,10 +497,7 @@ export function KidneyDiseaseForm({ onSubmit, loading }: KidneyDiseaseFormProps)
             )}
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Predict Kidney Disease
-        </Button>
+        <Button type="submit">Predict Kidney Disease</Button>
       </form>
     </Form>
   )

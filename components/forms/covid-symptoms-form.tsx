@@ -6,55 +6,105 @@ import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 
 const formSchema = z.object({
-  fever: z.enum(["Yes", "No"], { required_error: "Please select." }).default("No"),
-  cough: z.enum(["Yes", "No"], { required_error: "Please select." }).default("No"),
-  soreThroat: z.enum(["Yes", "No"], { required_error: "Please select." }).default("No"),
-  shortnessOfBreath: z.enum(["Yes", "No"], { required_error: "Please select." }).default("No"),
-  headache: z.enum(["Yes", "No"], { required_error: "Please select." }).default("No"),
-  ageGroup: z
-    .enum(["0-9", "10-19", "20-24", "25-59", "60+"], { required_error: "Please select age group." })
-    .default("25-59"),
-  gender: z.enum(["Male", "Female"], { required_error: "Please select gender." }).default("Male"),
-  contactWithConfirmed: z.enum(["Yes", "No"], { required_error: "Please select." }).default("No"),
+  breathingProblem: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  fever: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  dryCough: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  soreThroat: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  runningNose: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  asthma: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  chronicLungDisease: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  headache: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  heartDisease: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  diabetes: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  hyperTension: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  fatigue: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  gastrointestinal: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  abroadTravel: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  contactWithCovidPatient: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  attendedLargeGathering: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  visitedPublicExposedPlaces: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  familyWorkingInPublicExposedPlaces: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  wearingMask: z.enum(["Yes", "No"], { message: "Please select an option" }),
+  sanitizationFromPublic: z.enum(["Yes", "No"], { message: "Please select an option" }),
 })
 
 interface CovidSymptomsFormProps {
-  onSubmit: (data: z.infer<typeof formSchema>) => void
-  loading: boolean
+  setPrediction: Dispatch<SetStateAction<any>>
+  setLoading: Dispatch<SetStateAction<boolean>>
+  setError: Dispatch<SetStateAction<string | null>>
 }
 
-export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps) {
+export default function CovidSymptomsForm({ setPrediction, setLoading, setError }: CovidSymptomsFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      breathingProblem: "No",
       fever: "No",
-      cough: "No",
+      dryCough: "No",
       soreThroat: "No",
-      shortnessOfBreath: "No",
+      runningNose: "No",
+      asthma: "No",
+      chronicLungDisease: "No",
       headache: "No",
-      ageGroup: "25-59",
-      gender: "Male",
-      contactWithConfirmed: "No",
+      heartDisease: "No",
+      diabetes: "No",
+      hyperTension: "No",
+      fatigue: "No",
+      gastrointestinal: "No",
+      abroadTravel: "No",
+      contactWithCovidPatient: "No",
+      attendedLargeGathering: "No",
+      visitedPublicExposedPlaces: "No",
+      familyWorkingInPublicExposedPlaces: "No",
+      wearingMask: "No",
+      sanitizationFromPublic: "No",
     },
   })
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    setError(null)
+    setPrediction(null)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL}/api/predict/covid-symptoms`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Prediction failed")
+      }
+
+      const data = await response.json()
+      setPrediction(data)
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="fever"
+            name="breathingProblem"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fever</FormLabel>
+                <FormLabel>Breathing Problem</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -68,14 +118,35 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
           />
           <FormField
             control={form.control}
-            name="cough"
+            name="fever"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cough</FormLabel>
+                <FormLabel>Fever</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="dryCough"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Dry Cough</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -96,7 +167,7 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -110,14 +181,56 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
           />
           <FormField
             control={form.control}
-            name="shortnessOfBreath"
+            name="runningNose"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Shortness of Breath</FormLabel>
+                <FormLabel>Running Nose</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="asthma"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Asthma</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="chronicLungDisease"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Chronic Lung Disease</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -138,7 +251,7 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -152,22 +265,19 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
           />
           <FormField
             control={form.control}
-            name="ageGroup"
+            name="heartDisease"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Age Group</FormLabel>
+                <FormLabel>Heart Disease</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select age group" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="0-9">0-9</SelectItem>
-                    <SelectItem value="10-19">10-19</SelectItem>
-                    <SelectItem value="20-24">20-24</SelectItem>
-                    <SelectItem value="25-59">25-59</SelectItem>
-                    <SelectItem value="60+">60+</SelectItem>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -176,19 +286,19 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
           />
           <FormField
             control={form.control}
-            name="gender"
+            name="diabetes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Gender</FormLabel>
+                <FormLabel>Diabetes</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -197,14 +307,203 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
           />
           <FormField
             control={form.control}
-            name="contactWithConfirmed"
+            name="hyperTension"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contact with Confirmed COVID-19 Case</FormLabel>
+                <FormLabel>Hyper Tension</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="fatigue"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fatigue</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="gastrointestinal"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gastrointestinal</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="abroadTravel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Abroad Travel</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="contactWithCovidPatient"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contact with COVID Patient</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="attendedLargeGathering"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Attended Large Gathering</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="visitedPublicExposedPlaces"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Visited Public Exposed Places</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="familyWorkingInPublicExposedPlaces"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Family Working in Public Exposed Places</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="wearingMask"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Wearing Mask</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Yes">Yes</SelectItem>
+                    <SelectItem value="No">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="sanitizationFromPublic"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sanitization from Public</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select option" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -217,10 +516,7 @@ export function CovidSymptomsForm({ onSubmit, loading }: CovidSymptomsFormProps)
             )}
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Predict COVID-19 Symptoms
-        </Button>
+        <Button type="submit">Predict COVID-19 Symptoms</Button>
       </form>
     </Form>
   )

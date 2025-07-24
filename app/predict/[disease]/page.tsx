@@ -1,101 +1,60 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import { DiabetesForm } from "@/components/forms/diabetes-form"
-import { HeartDiseaseForm } from "@/components/forms/heart-disease-form"
-import { KidneyDiseaseForm } from "@/components/forms/kidney-disease-form"
-import { LiverDiseaseForm } from "@/components/forms/liver-disease-form"
-import { CovidSymptomsForm } from "@/components/forms/covid-symptoms-form"
-import { ImageUploadForm } from "@/components/forms/image-upload-form"
-import { PredictionResult } from "@/components/prediction-result"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import DiabetesForm from "@/components/forms/diabetes-form"
+import HeartDiseaseForm from "@/components/forms/heart-disease-form"
+import KidneyDiseaseForm from "@/components/forms/kidney-disease-form"
+import LiverDiseaseForm from "@/components/forms/liver-disease-form"
+import CovidSymptomsForm from "@/components/forms/covid-symptoms-form"
+import ImageUploadForm from "@/components/forms/image-upload-form"
+import PredictionResult from "@/components/prediction-result"
 import { useState } from "react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Terminal } from "lucide-react"
-
-interface PredictionResponse {
-  prediction: number
-  message: string
-  details?: any
-  error?: string
-}
 
 export default function DiseasePredictionPage() {
   const params = useParams()
   const disease = params.disease as string
-  const [predictionResult, setPredictionResult] = useState<PredictionResponse | null>(null)
+  const [prediction, setPrediction] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL || "http://localhost:8787" // Replace with your Cloudflare Worker URL
-
-  const handlePredict = async (data: any, isImageUpload = false) => {
-    setLoading(true)
-    setError(null)
-    setPredictionResult(null)
-
-    try {
-      let response
-      if (isImageUpload) {
-        const formData = new FormData()
-        formData.append("image", data.image)
-        response = await fetch(`${API_BASE_URL}/api/predict/${disease}`, {
-          method: "POST",
-          body: formData,
-        })
-      } else {
-        response = await fetch(`${API_BASE_URL}/api/predict/${disease}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
-      }
-
-      const result: PredictionResponse = await response.json()
-      setPredictionResult(result)
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.")
-      console.error("Prediction error:", err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const renderForm = () => {
+  const getForm = () => {
     switch (disease) {
       case "diabetes":
-        return <DiabetesForm onSubmit={handlePredict} loading={loading} />
+        return <DiabetesForm setPrediction={setPrediction} setLoading={setLoading} setError={setError} />
       case "heart-disease":
-        return <HeartDiseaseForm onSubmit={handlePredict} loading={loading} />
+        return <HeartDiseaseForm setPrediction={setPrediction} setLoading={setLoading} setError={setError} />
       case "kidney-disease":
-        return <KidneyDiseaseForm onSubmit={handlePredict} loading={loading} />
+        return <KidneyDiseaseForm setPrediction={setPrediction} setLoading={setLoading} setError={setError} />
       case "liver-disease":
-        return <LiverDiseaseForm onSubmit={handlePredict} loading={loading} />
+        return <LiverDiseaseForm setPrediction={setPrediction} setLoading={setLoading} setError={setError} />
       case "covid-symptoms":
-        return <CovidSymptomsForm onSubmit={handlePredict} loading={loading} />
+        return <CovidSymptomsForm setPrediction={setPrediction} setLoading={setLoading} setError={setError} />
       case "covid-detection":
         return (
-          <ImageUploadForm onSubmit={(data) => handlePredict(data, true)} loading={loading} diseaseName="COVID-19" />
+          <ImageUploadForm
+            disease="covid-detection"
+            setPrediction={setPrediction}
+            setLoading={setLoading}
+            setError={setError}
+          />
         )
       case "pneumonia-detection":
         return (
-          <ImageUploadForm onSubmit={(data) => handlePredict(data, true)} loading={loading} diseaseName="Pneumonia" />
+          <ImageUploadForm
+            disease="pneumonia-detection"
+            setPrediction={setPrediction}
+            setLoading={setLoading}
+            setError={setError}
+          />
         )
       default:
-        return (
-          <p className="text-center text-muted-foreground">Disease prediction for &quot;{disease}&quot; not found.</p>
-        )
+        return <p>Select a disease from the sidebar.</p>
     }
   }
 
-  const getDiseaseTitle = (slug: string) => {
-    switch (slug) {
+  const getTitle = () => {
+    switch (disease) {
       case "diabetes":
         return "Diabetes Prediction"
       case "heart-disease":
@@ -105,42 +64,70 @@ export default function DiseasePredictionPage() {
       case "liver-disease":
         return "Liver Disease Prediction"
       case "covid-symptoms":
-        return "COVID-19 Symptom Prediction"
+        return "COVID-19 Symptoms Prediction"
       case "covid-detection":
-        return "COVID-19 Image Detection"
+        return "COVID-19 Detection (Image)"
       case "pneumonia-detection":
-        return "Pneumonia Image Detection"
+        return "Pneumonia Detection (Image)"
       default:
-        return "Unknown Disease"
+        return "Disease Prediction"
+    }
+  }
+
+  const getDescription = () => {
+    switch (disease) {
+      case "diabetes":
+        return "Enter the patient's details to predict the likelihood of diabetes."
+      case "heart-disease":
+        return "Provide the patient's cardiovascular information for heart disease prediction."
+      case "kidney-disease":
+        return "Input the patient's lab results to assess kidney disease risk."
+      case "liver-disease":
+        return "Fill in the patient's liver-related parameters for liver disease prediction."
+      case "covid-symptoms":
+        return "Select the symptoms experienced by the patient to predict COVID-19 likelihood."
+      case "covid-detection":
+        return "Upload a chest X-ray image for COVID-19 detection."
+      case "pneumonia-detection":
+        return "Upload a chest X-ray image for pneumonia detection."
+      default:
+        return "Select a disease from the sidebar to get started with predictions."
     }
   }
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-center">{getDiseaseTitle(disease)}</h2>
-      <p className="text-muted-foreground text-center">
-        {disease.includes("detection")
-          ? "Upload an image for prediction."
-          : "Fill in the details below to get a prediction."}
-      </p>
+      <Card>
+        <CardHeader>
+          <CardTitle>{getTitle()}</CardTitle>
+          <CardDescription>{getDescription()}</CardDescription>
+        </CardHeader>
+        <CardContent>{getForm()}</CardContent>
+      </Card>
+
+      {loading && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Predicting...</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>Please wait while we process your request.</p>
+          </CardContent>
+        </Card>
+      )}
 
       {error && (
-        <Alert variant="destructive">
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-red-500">Error</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>{error}</p>
+          </CardContent>
+        </Card>
       )}
 
-      {renderForm()}
-
-      {predictionResult && (
-        <PredictionResult
-          prediction={predictionResult.prediction}
-          message={predictionResult.message}
-          details={predictionResult.details}
-        />
-      )}
+      {prediction && !loading && !error && <PredictionResult prediction={prediction} />}
     </div>
   )
 }

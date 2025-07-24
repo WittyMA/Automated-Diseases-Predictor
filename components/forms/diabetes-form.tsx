@@ -6,42 +6,70 @@ import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Loader2 } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 
 const formSchema = z.object({
-  pregnancies: z.coerce.number().min(0, "Cannot be negative").max(17, "Too many pregnancies").default(0),
-  glucose: z.coerce.number().min(0, "Cannot be negative").max(200, "Too high").default(120),
-  bloodPressure: z.coerce.number().min(0, "Cannot be negative").max(122, "Too high").default(70),
-  skinThickness: z.coerce.number().min(0, "Cannot be negative").max(99, "Too high").default(20),
-  insulin: z.coerce.number().min(0, "Cannot be negative").max(846, "Too high").default(80),
-  bmi: z.coerce.number().min(0, "Cannot be negative").max(67.1, "Too high").default(25),
-  diabetesPedigreeFunction: z.coerce.number().min(0, "Cannot be negative").max(2.42, "Too high").default(0.5),
-  age: z.coerce.number().min(0, "Cannot be negative").max(120, "Too old").default(30),
+  pregnancies: z.coerce.number().min(0, "Must be non-negative"),
+  glucose: z.coerce.number().min(0, "Must be non-negative"),
+  bloodPressure: z.coerce.number().min(0, "Must be non-negative"),
+  skinThickness: z.coerce.number().min(0, "Must be non-negative"),
+  insulin: z.coerce.number().min(0, "Must be non-negative"),
+  bmi: z.coerce.number().min(0, "Must be non-negative"),
+  diabetesPedigreeFunction: z.coerce.number().min(0, "Must be non-negative"),
+  age: z.coerce.number().min(0, "Must be non-negative"),
 })
 
 interface DiabetesFormProps {
-  onSubmit: (data: z.infer<typeof formSchema>) => void
-  loading: boolean
+  setPrediction: Dispatch<SetStateAction<any>>
+  setLoading: Dispatch<SetStateAction<boolean>>
+  setError: Dispatch<SetStateAction<string | null>>
 }
 
-export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
+export default function DiabetesForm({ setPrediction, setLoading, setError }: DiabetesFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       pregnancies: 0,
-      glucose: 120,
-      bloodPressure: 70,
-      skinThickness: 20,
-      insulin: 80,
-      bmi: 25,
-      diabetesPedigreeFunction: 0.5,
-      age: 30,
+      glucose: 0,
+      bloodPressure: 0,
+      skinThickness: 0,
+      insulin: 0,
+      bmi: 0,
+      diabetesPedigreeFunction: 0,
+      age: 0,
     },
   })
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    setError(null)
+    setPrediction(null)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL}/api/predict/diabetes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Prediction failed")
+      }
+
+      const data = await response.json()
+      setPrediction(data)
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -50,7 +78,7 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
               <FormItem>
                 <FormLabel>Pregnancies</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Number of pregnancies" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -61,9 +89,9 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
             name="glucose"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Glucose (mg/dL)</FormLabel>
+                <FormLabel>Glucose</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Glucose concentration" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,9 +102,9 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
             name="bloodPressure"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Blood Pressure (mmHg)</FormLabel>
+                <FormLabel>Blood Pressure</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Diastolic blood pressure" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,9 +115,9 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
             name="skinThickness"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Skin Thickness (mm)</FormLabel>
+                <FormLabel>Skin Thickness</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Triceps skin fold thickness" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,9 +128,9 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
             name="insulin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Insulin (mu U/ml)</FormLabel>
+                <FormLabel>Insulin</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="2-Hour serum insulin" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -115,7 +143,7 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
               <FormItem>
                 <FormLabel>BMI</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.1" placeholder="Body Mass Index" {...field} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -128,7 +156,7 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
               <FormItem>
                 <FormLabel>Diabetes Pedigree Function</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.001" placeholder="Diabetes pedigree function" {...field} />
+                  <Input type="number" step="0.001" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,17 +169,14 @@ export function DiabetesForm({ onSubmit, loading }: DiabetesFormProps) {
               <FormItem>
                 <FormLabel>Age</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Age in years" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Predict Diabetes
-        </Button>
+        <Button type="submit">Predict Diabetes</Button>
       </form>
     </Form>
   )

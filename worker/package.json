@@ -10,6 +10,6 @@
     "@cloudflare/workers-types": "^4.20240718.0",
     "itty-router": "^5.0.17",
     "typescript": "^5.5.3",
-    "wrangler": "^3.65.0"
+    "wrangler": "^4.25.1"
   }
 }
