@@ -1,0 +1,144 @@
+I������#sklearn.compose._column_transformerColumnTransformer)}(transformers](numsklearn.pipelinePipeline)}(steps](imputersklearn.impute._baseSimpleImputer)}(missing_valuesG������add_indicatorkeep_empty_featuresstrategymean
+fill_valueNcopy_sklearn_version1.5.1ubscalersklearn.preprocessing._dataStandardScaler)}(	with_meanwith_stdhhhubememoryNverbosehhub]Ageacath
+)}(h](hh)}(hG������hhhmost_frequenthNhhhubonehotsklearn.preprocessing._encodersOneHotEncoder)}(
+categoriesautosparse_outputdtypenumpyfloat64handle_unknownignoredropNmin_frequencyNmax_categoriesNfeature_name_combinerconcathhubeh(Nh)hhub](Fever	Tiredness	Dry_CoughDifficulty_in_BreathingSore_ThroatNone_SymptomPainsNasal_Congestion
+Runny_NoseDiarrheaNone_ExperiencingGenderContactee	remainderpassthroughsparse_thresholdG?333333n_jobsNtransformer_weightsNh)verbose_feature_names_outforce_int_remainder_colsfeature_names_in_joblib.numpy_pickleNumpyArrayWrapper)}(subclassh?ndarrayshapeKorderCh>h?dtypeO8R(K|NNNJJK?tb
+allow_mmapnumpy_array_alignment_bytesKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���FeverqX	���TirednessqX	���Dry_CoughqX���Difficulty_in_BreathingqX���Sore_ThroatqX���None_SymptomqX���PainsqX���Nasal_CongestionqX
+���Runny_NoseqX���DiarrheaqX���None_ExperiencingqX���AgeqX���GenderqX���Contactqetq bo������n_features_in_K_columns](h*hJe_transformer_to_input_indices}(h]Kah-](K�KKKKKKKKK	K
+KKehY]u
+_remainderhYhZh�_RemainderColsList)}(data]future_dtypestrwarning_was_emittedwarning_enabledubsparse_output_transformers_](hh
+)}(h](hh)}(hG������hhhhhNhh`hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]qX���Ageqatqbv�������hvK
+_fit_dtypehnf8R(KhNNNJJK�tbC������Rmean_hc)}(hfhhhiKhkhlh>hhthuKubtH@�������hhubhh")}(h%h&hhvKn_samples_seen_numpy.core.multiarrayscalarhni8R(KhNNNJJK�tbC������Rmean_hc)}(hfhhhiKhkhlh>hhthuKub?l4T@,�������var_hc)}(hfhhhiKhkhlh>hhthuKubl@x<@r�������hhubeh(Nh)hhubh*h-h
+)}(h](hh)}(hG������hhhh3hNhh`hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���FeverqX	���TirednessqX	���Dry_CoughqX���Difficulty_in_BreathingqX���Sore_ThroatqX���None_SymptomqX���PainsqX���Nasal_CongestionqX
+���Runny_NoseqX���DiarrheaqX���None_ExperiencingqX���GenderqX���Contactqetqb0�������hvKhhqhNhhc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���YesqX���YesqX���NoqX���YesqX���YesqX���YesqX���NoqX���NoqX���NoqX���NoqX���FemaleqX���Noqetqb}�������hhubh5h8)}(h;h<h=h>hAhBhChDNhENhFNhGhH_infrequent_enabledhvKcategories_](hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���FemaleqX���Maleqetqb#�������hc)}(hfhhhiKhkhlh>hqhthuKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���NoqX���Yesqetqb.�������e_drop_idx_after_groupingN	drop_idx_N_n_features_outs](KKKKKKKKKKKKKehhubeh(Nh)hhubhJeoutput_indices_}(h
+dill._dill
+_load_typesliceRK�KNRh-j��KKNRhYj��K�K�NRuhhub.
+# This is a binary file (Python pickle).
+# In a real application, this would be loaded and used by a Python inference server.
+# It cannot be directly executed within a Cloudflare Worker.

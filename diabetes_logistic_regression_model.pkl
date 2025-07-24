@@ -1,0 +1,17 @@
+	������sklearn.linear_model._logisticLogisticRegression)}(penaltyl2dualtolG?6C-CG?������fit_interceptintercept_scalingKclass_weightNrandom_stateK*solver	liblinearmax_iterKdmulti_class
+deprecatedverboseK�
+warm_startn_jobsNl1_ratioNfeature_names_in_joblib.numpy_pickleNumpyArrayWrapper)}(subclassnumpyndarrayshapeKorderh	dtypehdtypeO8R(K|NNNJJK?tb
+allow_mmapnumpy_array_alignment_bytesKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���PregnanciesqX���GlucoseqX���BloodPressureqX���SkinThicknessqX���InsulinqX���BMIqX���DiabetesPedigreeFunctionqX���Ageqetqbe�������n_features_in_Kclasses_h)}(hh h!Kh#h	h$h&i8R(K<NNNJJK�tbh,h-Kub���������������O�������coef_h)}(hh h!KKh#h	h$h&f8R(Kh6NNNJJK�tbh,h-Kubf\~vn?C\i.?\Wpr?IL҈1?, |?3T?0�������
+intercept_h)}(hh h!Kh#h	h$h>h,h-Kub=Xl뿕O�������n_iter_h)}(hh h!Kh#h	h$h&i4R(Kh6NNNJJK�tbh,h-Kub����������_sklearn_version1.5.1ub.
+# This is a binary file (Python pickle).
+# In a real application, this would be loaded and used by a Python inference server.
+# It cannot be directly executed within a Cloudflare Worker.

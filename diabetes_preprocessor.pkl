@@ -1,0 +1,34 @@
+# This is a binary file (Python pickle).
+# In a real application, this would be loaded and used by a Python inference server.
+# It cannot be directly executed within a Cloudflare Worker.
+������#sklearn.compose._column_transformerColumnTransformer)}(transformers](numsklearn.pipelinePipeline)}(steps](imputersklearn.impute._baseSimpleImputer)}(missing_valuesG������add_indicatorkeep_empty_featuresstrategymean
+fill_valueNcopy_sklearn_version1.5.1ubscalersklearn.preprocessing._dataStandardScaler)}(	with_meanwith_stdhhhubememoryNverbosehhub](PregnanciesGlucoseBloodPressureSkinThicknessInsulinBMIDiabetesPedigreeFunctionAgeecath
+)}(h](hh)}(hG������hhhmost_frequenthNhhhubonehotsklearn.preprocessing._encodersOneHotEncoder)}(
+categoriesautosparse_outputdtypenumpyfloat64handle_unknownignoredropNmin_frequencyNmax_categoriesNfeature_name_combinerconcathhubeh(Nh)hhub]e	remainderhKsparse_thresholdG?333333n_jobsNtransformer_weightsNh)verbose_feature_names_outforce_int_remainder_colsfeature_names_in_joblib.numpy_pickleNumpyArrayWrapper)}(subclasshFndarrayshapeKorderChEhFdtypeO8R(K|NNNJJK?tb
+allow_mmapnumpy_array_alignment_bytesKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���PregnanciesqX���GlucoseqX���BloodPressureqX���SkinThicknessqX���InsulinqX���BMIqX���DiabetesPedigreeFunctionqX���Ageqetqb.�������n_features_in_K_columns](h*hQe_transformer_to_input_indices}(h](K�KKKKKKKeh4]hS]u
+_remainderhShKhvsparse_output_transformers_](hh
+)}(h](hh)}(hG������hhhhhNhhYh\)}(h_hahbKhdhehEhjhmhnKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���PregnanciesqX���GlucoseqX���BloodPressureqX���SkinThicknessqX���InsulinqX���BMIqX���DiabetesPedigreeFunctionqX���Ageqetqbv�������hoK
+_fit_dtypehgf8R(K<NNNJJK�tb
+indicator_Nstatistics_h\)}(h_hahbKhdhehEhhmhnKub@rk^@R@7F'=@qc@l+:@@-$M83?UUUU՞@@�������hhubhh")}(h%h&hhoKn_samples_seen_numpy.core.multiarrayscalarhgi8R(KhNNNJJK�tbC�������Rmean_h\)}(h_hahbKhdhehEhhmhnKub@rk^@R@5F'=@qc@l+:@@-$M83?UUUU՞@@*�������var_h\)}(h_hahbKhdhehEhhmhnKubq&@]@깵1Db@੭KS@Z1-3@{kmcG@%?rQCa@,�������scale_h\)}(h_hahbKhdhehEhhmhnKub
+Vf
+@xLRj>@AK-(@r!@x=U@ؠ{@H0?Ѭ3Q'@�������hhubeh(Nh)hhubh*h4h5hQeoutput_indices_}(h
+dill._dill
+_load_typesliceRK�KNRh4hK�K�NRhShK�K�NRuhhub.

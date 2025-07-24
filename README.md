@@ -1,1 +1,1 @@
-# Automated-Diseases-Predictor
+# MultiModalDiseasePrediction

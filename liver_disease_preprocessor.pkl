@@ -1,0 +1,65 @@
+# This is a binary file (Python pickle).
+# In a real application, this would be loaded and used by a Python inference server.
+# It cannot be directly executed within a Cloudflare Worker.
+M������#sklearn.compose._column_transformerColumnTransformer)}(transformers](numsklearn.pipelinePipeline)}(steps](imputersklearn.impute._baseSimpleImputer)}(missing_valuesG������add_indicatorkeep_empty_featuresstrategymean
+fill_valueNcopy_sklearn_version1.5.1ubscalersklearn.preprocessing._dataStandardScaler)}(	with_meanwith_stdhhhubememoryNverbosehhub](AgeTotal_BilirubinDirect_BilirubinAlkaline_PhosphotaseAlamine_AminotransferaseAspartate_AminotransferaseTotal_ProtiensAlbuminAlbumin_and_Globulin_Ratioecath
+)}(h](hh)}(hG������hhhmost_frequenthNhhhubonehotsklearn.preprocessing._encodersOneHotEncoder)}(
+categoriesautosparse_outputdtypenumpyfloat64handle_unknownignoredropNmin_frequencyNmax_categoriesNfeature_name_combinerconcathhubeh(Nh)hhub]Genderae	remainderpassthroughsparse_thresholdG?333333n_jobsNtransformer_weightsNh)verbose_feature_names_outforce_int_remainder_colsfeature_names_in_joblib.numpy_pickleNumpyArrayWrapper)}(subclasshGndarrayshapeK
+orderChFhGdtypeO8R(K|NNNJJK?tb
+allow_mmapnumpy_array_alignment_bytesKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KK
+q
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���AgeqX���GenderqX���Total_BilirubinqX���Direct_BilirubinqX���Alkaline_PhosphotaseqX���Alamine_AminotransferaseqX���Aspartate_AminotransferaseqX���Total_ProtiensqX���AlbuminqX���Albumin_and_Globulin_Ratioqetqbg������n_features_in_K
+_columns](h*hRe_transformer_to_input_indices}(h](K�KKKKKKKK	eh5]KahU]u
+_remainderhUhVh�_RemainderColsList)}(data]future_dtypestrwarning_was_emittedwarning_enabledubsparse_output_transformers_](hh
+)}(h](hh)}(hG������hhhhhNhh\h_)}(hbhdheK	hghhhFhmhphqKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KK	q
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���AgeqX���Total_BilirubinqX���Direct_BilirubinqX���Alkaline_PhosphotaseqX���Alamine_AminotransferaseqX���Aspartate_AminotransferaseqX���Total_ProtiensqX���AlbuminqX���Albumin_and_Globulin_Ratioqetqbv�������hrK	
+_fit_dtypehjf8R(K<NNNJJK?tb
+indicator_Nstatistics_h_)}(hbhdheK	hghhhFhhphqKubp=
+G@B@"@(\@Qp@Gzn@ov@O@C$u?�������hhubhh")}(h%h&hhrK	n_samples_seen_numpy.core.multiarrayscalarhji8R(KhNNNJJK�tbCd�������Rmean_h_)}(hbhdheK	hghhhFhhphqKubp=
+G@B@"@(\@Qp@Gzn@ov@O@C$u?*�������var_h_)}(hbhdheK	hghhhFhhphqKub@6AA~@32jW@@\CnA\ Ao@_)@C8 (@72*@#qI;?,�������scale_h_)}(hbhdheK	hghhhFhhphqKub:a6@qm&6@ͣ@˳Un@Ca@'!a@OF@(3T?	hFm?r�������hhubeh(Nh)hhubh*h5h
+)}(h](hh)}(hG������hhhh;hNhh\h_)}(hbhdheKhghhhFhmhphqKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]qX���Genderqatqb0�������hrKhhmhNhh_)}(hbhdheKhghhhFhmhphqKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]qX���Femaleqatqb|�������hhubh=h@)}(hChDhEhFhIhJhKhLNhMNhNNhOhP_infrequent_enabledhrKcategories_]h_)}(hbhdheKhghhhFhmhphqKubcnumpy.core.multiarray
+_reconstruct
+q�cnumpy
+ndarray
+qK�qc_codecs
+encode
+qX���bqX���latin1qqRqqRq	(KKq
+cnumpy
+dtype
+qX���O8qqRq(KX���|qNNNJJK?tqb]q(X���FemaleqX���Maleqetqb.�������a_drop_idx_after_groupingN	drop_idx_N_n_features_outs]Kahhubeh(Nh)hhubhReoutput_indices_}(h
+dill._dill
+_load_typesliceRK�K	NRh5hK	KNRhUhK�K�NRuhhub.
